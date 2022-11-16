@@ -1,8 +1,47 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+// MAIN APP ROUTING
+// EXERCISE 1
+app.MapGet("/convertstring", (String? value) => {
+    if (!(value is null) && !value.Equals("") && value.All(Char.IsDigit)) {
+        try {
+            long numberValue = StrToInteger(value);
+            return Results.Ok(new { value = numberValue });
+        } catch (ArithmeticException) {
+            return Results.BadRequest(new { error = "input value is too large." });
+        }
+    }
+
+    return Results.BadRequest(new { error = "value query is missing or invalid." });
+});
+
+// EXCERCISE 2
+app.MapGet("/chequetext", (String? value) => {
+    Decimal dValue;
+    String chequeText;
+
+    if (!(value is null) && !value.Equals("") && Decimal.TryParse(value, out dValue) && dValue > 0) {
+        try {
+            chequeText = CreateChequeText(dValue);
+        } catch (OverflowException) {
+            return Results.BadRequest(new { error = "input value is too large." });
+        }
+
+        return Results.Ok(new { chequeText });
+    }
+
+    return Results.BadRequest(new { error = "value query is missing or invalid." });
+});
+
+app.Run();
+
 // EXERCISE 1 FUNCTION
 long StrToInteger(string strNumber) {
+    /* 
+        For each char in string, convert the ASCII value of the char to it's digit value, 
+        then shift the whole number left (multiply by 10) and add the new digit.
+    */
     long value = 0;
     foreach (char c in strNumber) {
         value = checked(value * 10);
@@ -23,6 +62,11 @@ String NumberToEnglish(long n){
         new Tuple<long, String>(100, " HUNDRED "),
     };
 
+    /* 
+        Recursively calls the function to split each "big number" section, 
+        ending each function call after adding remaining tens and ones
+        e.g. 123456 is split into 7 parts, added to the string in order 100, 20, 3, 1000, 400, 50, 6
+    */
     String text = "";
     foreach (Tuple<long, String> pair in powersOfTen) {
         if (n / pair.Item1 > 0){
@@ -32,7 +76,7 @@ String NumberToEnglish(long n){
     }
 
     if (n > 0){
-        if (!String.IsNullOrEmpty(text)) {
+        if (!text.Equals("")) {
             text += "AND ";
         }
         if (n < 20) {
@@ -45,6 +89,7 @@ String NumberToEnglish(long n){
         }
     }
 
+    // Post cleanup of any trailing spaces
     if (text.EndsWith(" ")) {
         text = text.Remove(text.Length - 1);
     }
@@ -52,6 +97,7 @@ String NumberToEnglish(long n){
 }
 
 string CreateChequeText(Decimal number) {
+    // Splits the decimal input into two long int values around the point
     long dollars = (long) Math.Floor(number);
     long cents = (long) (Math.Round(number % 1 * 100));
 
@@ -65,36 +111,3 @@ string CreateChequeText(Decimal number) {
         return "";
     }
 }
-
-// MAIN APP ROUTING
-app.MapGet("/convertstring", (String? value) => {
-    if (!(value is null) && !value.Equals("") && value.All(Char.IsDigit)) {
-        try {
-            long numberValue = StrToInteger(value);
-            return Results.Ok(new { value = numberValue });
-        } catch (ArithmeticException) {
-            return Results.BadRequest(new { error = "input value is too large." });
-        }
-    }
-
-    return Results.BadRequest(new { error = "value query is missing or invalid." });
-});
-
-app.MapGet("/chequetext", (String? value) => {
-    Decimal dValue;
-    String chequeText;
-
-    if (!(value is null) && !value.Equals("") && Decimal.TryParse(value, out dValue) && dValue > 0) {
-        try {
-            chequeText = CreateChequeText(dValue);
-        } catch (OverflowException) {
-            return Results.BadRequest(new { error = "input value is too large." });
-        }
-
-        return Results.Ok(new { chequeText });
-    }
-
-    return Results.BadRequest(new { error = "value query is missing or invalid." });
-});
-
-app.Run();
