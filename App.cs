@@ -1,7 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-// EXERCISE 1 MAIN FUNCTION
+// EXERCISE 1 FUNCTION
 long StrToInteger(string strNumber) {
     long value = 0;
     foreach (char c in strNumber) {
@@ -56,11 +56,11 @@ string CreateChequeText(decimal number) {
     long cents = (long) Math.Round(number % 1 * 100);
 
     if (dollars > 0 && cents > 0) {
-        return String.Format("{0} DOLLARS AND {1} CENTS", NumberToEnglish(dollars), NumberToEnglish(cents));
+        return String.Format("{0} DOLLAR{1} AND {2} CENT{3}", NumberToEnglish(dollars), dollars > 1 ? "S":"", NumberToEnglish(cents), cents > 1 ? "S":"");
     } else if (dollars > 0) {
-        return String.Format("{0} DOLLARS", NumberToEnglish(dollars));
+        return String.Format("{0} DOLLAR{1}", NumberToEnglish(dollars), dollars > 1 ? "S":"");
     } else if (cents > 0) {
-        return String.Format("{0} CENTS", NumberToEnglish(cents));
+        return String.Format("{0} CENT{1}", NumberToEnglish(cents), cents > 1 ? "S":"");
     } else {
         return "";
     }
@@ -68,18 +68,18 @@ string CreateChequeText(decimal number) {
 
 // MAIN APP ROUTING
 app.MapGet("/convertstring", (string? value) => {
-    if (!(value is null) && value.All(Char.IsDigit)) {
+    if (!(value is null) && !value.Equals("") && value.All(Char.IsDigit)) {
         return Results.Ok(new { value = StrToInteger(value) });
     }
-    return Results.BadRequest();
+    return Results.BadRequest(new { message = "value query is missing or invalid." });
 });
 
 app.MapGet("/chequetext", (string? value) => {
     decimal dValue;
-    if (!(value is null) && decimal.TryParse(value, out dValue)) {
+    if (!(value is null) && !value.Equals("") && decimal.TryParse(value, out dValue)) {
         return Results.Ok(new { chequeText = CreateChequeText(dValue) });
     }
-    return Results.BadRequest();
+    return Results.BadRequest(new { message = "value query is missing or invalid." });
 });
 
 app.Run();
