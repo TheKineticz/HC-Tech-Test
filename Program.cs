@@ -13,19 +13,19 @@ long StrToNumber(string strNumber) {
 string NumberToEnglish(long n){
     string[] units = {"ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"};
     string[] tens = {"ZERO", "TEN", "TWENTY", "THIRTY", "FOURTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"};
-    Dictionary<long, string> tenPowersMap = new Dictionary<long, string>() {
-        {1000000000000, " TRILLION "},
-        {1000000000, " BILLION "},
-        {1000000, " MILLION "},
-        {1000, " THOUSAND "},
-        {100, " HUNDRED "},
+    Tuple<long, string>[] powersOfTen = {
+        new Tuple<long, string>(1000000000000, " TRILLION "),
+        new Tuple<long, string>(1000000000, " BILLION "),
+        new Tuple<long, string>(1000000, " MILLION "),
+        new Tuple<long, string>(1000, " THOUSAND "),
+        new Tuple<long, string>(100, " HUNDRED "),
     };
 
     string text = "";
-    foreach (KeyValuePair<long, string> pair in tenPowersMap) {
-        if (n / pair.Key > 0){
-            text += NumberToEnglish(n / pair.Key) + pair.Value;
-            n %= pair.Key;
+    foreach (Tuple<long, string> pair in powersOfTen) {
+        if (n / pair.Item1 > 0){
+            text += NumberToEnglish(n / pair.Item1) + pair.Item2;
+            n %= pair.Item1;
         }
     }
 
