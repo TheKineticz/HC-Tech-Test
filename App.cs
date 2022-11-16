@@ -52,8 +52,8 @@ string NumberToEnglish(long n){
 }
 
 string CreateChequeText(decimal number) {
-    int dollars = (int) number;
-    int cents = (int) Math.Round(number % 1 * 100);
+    long dollars = (long) number;
+    long cents = (long) Math.Round(number % 1 * 100);
 
     if (dollars > 0 && cents > 0) {
         return String.Format("{0} DOLLARS AND {1} CENTS", NumberToEnglish(dollars), NumberToEnglish(cents));
