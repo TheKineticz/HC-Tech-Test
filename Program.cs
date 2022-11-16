@@ -1,15 +1,17 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-long StrToNumber(string strNumber) {
-    long number = 0;
+// EXERCISE 1 MAIN FUNCTION
+long StrToInteger(string strNumber) {
+    long value = 0;
     foreach (char c in strNumber) {
-        number *= 10;
-        number += c - '0';
+        value *= 10;
+        value += c - '0';
     }
-    return number;
+    return value;
 }
 
+// EXERCISE 2 FUNCTIONS
 string NumberToEnglish(long n){
     string[] units = {"ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"};
     string[] tens = {"ZERO", "TEN", "TWENTY", "THIRTY", "FOURTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"};
@@ -64,15 +66,13 @@ string CreateChequeText(decimal number) {
     }
 }
 
-
-app.MapGet("/", () => "Hello World!");
-
-app.MapGet("/strtonumber", (string number) => {
-    return StrToNumber(number);
+// MAIN APP ROUTING
+app.MapGet("/convertstring", (string str) => {
+    return TypedResults.Ok(new { value = StrToInteger(str) });
 });
 
-app.MapGet("/createchequetext", (decimal number) => {
-    return CreateChequeText(number);
+app.MapGet("/chequetext", (decimal n) => {
+    return TypedResults.Ok(new { chequeText = CreateChequeText(n) });
 });
 
 app.Run();
