@@ -12,19 +12,19 @@ long StrToInteger(string strNumber) {
 }
 
 // EXERCISE 2 FUNCTIONS
-string NumberToEnglish(long n){
-    string[] units = {"ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"};
-    string[] tens = {"ZERO", "TEN", "TWENTY", "THIRTY", "FOURTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"};
-    Tuple<long, string>[] powersOfTen = {
-        new Tuple<long, string>(1000000000000, " TRILLION "),
-        new Tuple<long, string>(1000000000, " BILLION "),
-        new Tuple<long, string>(1000000, " MILLION "),
-        new Tuple<long, string>(1000, " THOUSAND "),
-        new Tuple<long, string>(100, " HUNDRED "),
+String NumberToEnglish(long n){
+    String[] units = {"ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"};
+    String[] tens = {"ZERO", "TEN", "TWENTY", "THIRTY", "FOURTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"};
+    Tuple<long, String>[] powersOfTen = {
+        new Tuple<long, String>(1000000000000, " TRILLION "),
+        new Tuple<long, String>(1000000000, " BILLION "),
+        new Tuple<long, String>(1000000, " MILLION "),
+        new Tuple<long, String>(1000, " THOUSAND "),
+        new Tuple<long, String>(100, " HUNDRED "),
     };
 
-    string text = "";
-    foreach (Tuple<long, string> pair in powersOfTen) {
+    String text = "";
+    foreach (Tuple<long, String> pair in powersOfTen) {
         if (n / pair.Item1 > 0){
             text += NumberToEnglish(n / pair.Item1) + pair.Item2;
             n %= pair.Item1;
@@ -51,9 +51,9 @@ string NumberToEnglish(long n){
     return text;
 }
 
-string CreateChequeText(decimal number) {
-    long dollars = (long) number;
-    long cents = (long) Math.Round(number % 1 * 100);
+string CreateChequeText(Decimal number) {
+    long dollars = (long) Math.Floor(number);
+    long cents = (long) (Math.Round(number % 1 * 100));
 
     if (dollars > 0 && cents > 0) {
         return String.Format("{0} DOLLAR{1} AND {2} CENT{3}", NumberToEnglish(dollars), dollars > 1 ? "S":"", NumberToEnglish(cents), cents > 1 ? "S":"");
@@ -90,7 +90,7 @@ app.MapGet("/chequetext", (String? value) => {
         } catch (OverflowException) {
             return Results.BadRequest(new { error = "input value is too large." });
         }
-        
+
         return Results.Ok(new { chequeText });
     }
 
