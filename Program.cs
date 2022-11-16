@@ -1,19 +1,78 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-int StrToInt(string strNumber){
-    int number = 0;
-    foreach (char c in strNumber){
+long StrToNumber(string strNumber) {
+    long number = 0;
+    foreach (char c in strNumber) {
         number *= 10;
         number += c - '0';
     }
     return number;
 }
 
+string NumberToEnglish(long n){
+    string[] units = {"ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"};
+    string[] tens = {"ZERO", "TEN", "TWENTY", "THIRTY", "FOURTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"};
+    Dictionary<long, string> tenPowersMap = new Dictionary<long, string>() {
+        {1000000000000, " TRILLION "},
+        {1000000000, " BILLION "},
+        {1000000, " MILLION "},
+        {1000, " THOUSAND "},
+        {100, " HUNDRED "},
+    };
+
+    string text = "";
+    foreach (KeyValuePair<long, string> pair in tenPowersMap) {
+        if (n / pair.Key > 0){
+            text += NumberToEnglish(n / pair.Key) + pair.Value;
+            n %= pair.Key;
+        }
+    }
+
+    if (n > 0){
+        if (!String.IsNullOrEmpty(text)) {
+            text += "AND ";
+        }
+        if (n < 20) {
+            text += units[n];
+        } else {
+            text += tens[n / 10];
+            if (n % 10 > 0) {
+                text += "-" + units[n % 10];
+            }
+        }
+    }
+
+    if (text.EndsWith(" ")) {
+        text = text.Remove(text.Length - 1);
+    }
+    return text;
+}
+
+string CreateChequeText(decimal number) {
+    int dollars = (int) number;
+    int cents = (int) Math.Round(number % 1 * 100);
+
+    if (dollars > 0 && cents > 0) {
+        return String.Format("{0} DOLLARS AND {1} CENTS", NumberToEnglish(dollars), NumberToEnglish(cents));
+    } else if (dollars > 0) {
+        return String.Format("{0} DOLLARS", NumberToEnglish(dollars));
+    } else if (cents > 0) {
+        return String.Format("{0} CENTS", NumberToEnglish(cents));
+    } else {
+        return "";
+    }
+}
+
+
 app.MapGet("/", () => "Hello World!");
 
-app.MapGet("/strtoint", (string number) => {
-    return StrToInt(number);
+app.MapGet("/strtonumber", (string number) => {
+    return StrToNumber(number);
+});
+
+app.MapGet("/createchequetext", (decimal number) => {
+    return CreateChequeText(number);
 });
 
 app.Run();
