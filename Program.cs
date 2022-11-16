@@ -67,12 +67,12 @@ string CreateChequeText(decimal number) {
 }
 
 // MAIN APP ROUTING
-app.MapGet("/convertstring", (string str) => {
-    return TypedResults.Ok(new { value = StrToInteger(str) });
+app.MapGet("/convertstring", (string value) => {
+    return TypedResults.Ok(new { value = StrToInteger(value) });
 });
 
-app.MapGet("/chequetext", (decimal n) => {
-    return TypedResults.Ok(new { chequeText = CreateChequeText(n) });
+app.MapGet("/chequetext", (decimal value) => {
+    return TypedResults.Ok(new { chequeText = CreateChequeText(value) });
 });
 
 app.Run();
