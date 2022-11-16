@@ -5,7 +5,7 @@ var app = builder.Build();
 long StrToInteger(string strNumber) {
     long value = 0;
     foreach (char c in strNumber) {
-        value *= 10;
+        value = checked(value * 10);
         value += c - '0';
     }
     return value;
@@ -69,9 +69,14 @@ string CreateChequeText(decimal number) {
 // MAIN APP ROUTING
 app.MapGet("/convertstring", (string? value) => {
     if (!(value is null) && !value.Equals("") && value.All(Char.IsDigit)) {
-        return Results.Ok(new { value = StrToInteger(value) });
+        try {
+            long numberValue = StrToInteger(value);
+            return Results.Ok(new { value = numberValue });
+        } catch (ArithmeticException) {
+            return Results.BadRequest(new { error = "input value is too large." });
+        }
     }
-    return Results.BadRequest(new { message = "value query is missing or invalid." });
+    return Results.BadRequest(new { error = "value query is missing or invalid." });
 });
 
 app.MapGet("/chequetext", (string? value) => {
@@ -79,7 +84,7 @@ app.MapGet("/chequetext", (string? value) => {
     if (!(value is null) && !value.Equals("") && decimal.TryParse(value, out dValue)) {
         return Results.Ok(new { chequeText = CreateChequeText(dValue) });
     }
-    return Results.BadRequest(new { message = "value query is missing or invalid." });
+    return Results.BadRequest(new { error = "value query is missing or invalid." });
 });
 
 app.Run();
