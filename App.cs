@@ -36,6 +36,7 @@ app.MapGet("/chequetext", (String? value) => {
 
 app.Run();
 
+
 // EXERCISE 1 FUNCTION
 long StrToInteger(string strNumber) {
     /* 
