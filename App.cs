@@ -84,7 +84,7 @@ app.MapGet("/chequetext", (String? value) => {
     Decimal dValue;
     String chequeText;
 
-    if (!(value is null) && !value.Equals("") && Decimal.TryParse(value, out dValue)) {
+    if (!(value is null) && !value.Equals("") && Decimal.TryParse(value, out dValue) && dValue > 0) {
         try {
             chequeText = CreateChequeText(dValue);
         } catch (OverflowException) {
