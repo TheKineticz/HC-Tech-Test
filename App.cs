@@ -67,7 +67,7 @@ string CreateChequeText(decimal number) {
 }
 
 // MAIN APP ROUTING
-app.MapGet("/convertstring", (string? value) => {
+app.MapGet("/convertstring", (String? value) => {
     if (!(value is null) && !value.Equals("") && value.All(Char.IsDigit)) {
         try {
             long numberValue = StrToInteger(value);
@@ -76,14 +76,24 @@ app.MapGet("/convertstring", (string? value) => {
             return Results.BadRequest(new { error = "input value is too large." });
         }
     }
+
     return Results.BadRequest(new { error = "value query is missing or invalid." });
 });
 
-app.MapGet("/chequetext", (string? value) => {
-    decimal dValue;
-    if (!(value is null) && !value.Equals("") && decimal.TryParse(value, out dValue)) {
-        return Results.Ok(new { chequeText = CreateChequeText(dValue) });
+app.MapGet("/chequetext", (String? value) => {
+    Decimal dValue;
+    String chequeText;
+
+    if (!(value is null) && !value.Equals("") && Decimal.TryParse(value, out dValue)) {
+        try {
+            chequeText = CreateChequeText(dValue);
+        } catch (OverflowException) {
+            return Results.BadRequest(new { error = "input value is too large." });
+        }
+        
+        return Results.Ok(new { chequeText });
     }
+
     return Results.BadRequest(new { error = "value query is missing or invalid." });
 });
 
