@@ -17,6 +17,6 @@ The application should now be running and accessible via http://localhost:5285/.
 ## How to interact with the API
 The API exposes two GET endpoints which can be tested through your browser or API testing application, such as Postman:
 
-`/convertstring` Accepts one query parameter `value` - a positive or negative integer in string format, which will be converted to a long integer format and returned.
+`/exa` for Exercise A: Accepts one query parameter `value` - a positive or negative integer in string format, which will be converted to a long integer format and returned.
 
-`/chequetext` Accepts one query parameter `value` - a positive decimal number, which will be rounded to two decimal points, then converted to Word form in English. 
+`/exb` for Exercise B: Accepts one query parameter `value` - a positive decimal number, which will be rounded to two decimal points, then converted to Word form in English. 
