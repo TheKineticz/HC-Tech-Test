@@ -45,6 +45,10 @@ public static class Ex2 {
     }
 
     public static string CreateChequeText(Decimal number) {
+        if (number < 0) {
+            throw new ArgumentException("number parameter cannot be negative", nameof(number));
+        }
+        
         // Splits the decimal input into two long int values around the point
         long dollars = (long) Math.Floor(number);
         long cents = (long) (Math.Round(number % 1 * 100));
@@ -56,7 +60,7 @@ public static class Ex2 {
         } else if (cents > 0) {
             return String.Format("{0} CENT{1}", NumberToEnglish(cents), cents > 1 ? "S":"");
         } else {
-            return "";
+            return "ZERO DOLLARS";
         }
     }
 
@@ -65,7 +69,7 @@ public static class Ex2 {
         String chequeText;
 
         if (!String.IsNullOrEmpty(value)) {
-            if (Decimal.TryParse(value, out dValue) && dValue > 0) {
+            if (Decimal.TryParse(value, out dValue) && dValue >= 0) {
                 try {
                     chequeText = Ex2.CreateChequeText(dValue);
                     return Results.Ok(new { chequeText });
@@ -73,7 +77,7 @@ public static class Ex2 {
                     return Results.BadRequest(new { error = "Input value is too large." });
                 }
             } else {
-                return Results.BadRequest(new { error = "Input value must be a positive number." });
+                return Results.BadRequest(new { error = "Input value must be positive or zero." });
             }
         }
 
