@@ -18,3 +18,6 @@ The API exposes two GET endpoints which can be tested through your browser or AP
 `/convertstring` Accepts one query parameter `value` - a positive or negative integer in string format, which will be converted to a long integer format and returned.
 
 `/chequetext` Accepts one query parameter `value` - a positive decimal number, which will be rounded to two decimal points, then converted to Word form in English. 
+
+
+The Tests.cs file contains a small XUnit unit test suite for the two exercises, which can be run via the IDE of your choice, if you wish to run them.
