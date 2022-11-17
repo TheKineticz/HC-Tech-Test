@@ -4,16 +4,20 @@ var app = builder.Build();
 // MAIN APP ROUTING
 // EXERCISE 1
 app.MapGet("/convertstring", (String? value) => {
-    if (!(value is null) && !value.Equals("") && value.All(Char.IsDigit)) {
-        try {
-            long numberValue = StrToInteger(value);
-            return Results.Ok(new { value = numberValue });
-        } catch (ArithmeticException) {
-            return Results.BadRequest(new { error = "input value is too large." });
+    if (!String.IsNullOrEmpty(value)) {
+        if (value.All(Char.IsDigit) || (value.StartsWith("-") && !value.Equals("-") && value.Remove(0, 1).All(Char.IsDigit))) {
+            try {
+                long numberValue = StrToInteger(value);
+                return Results.Ok(new { value = numberValue });
+            } catch (ArithmeticException) {
+                return Results.BadRequest(new { error = "Input value is too large." });
+            }
+        } else {
+            return Results.BadRequest(new { error = "Input value must only contain digits, not including negative sign." });
         }
     }
 
-    return Results.BadRequest(new { error = "value query is missing or invalid." });
+    return Results.BadRequest(new { error = "Value query is missing or empty." });
 });
 
 // EXCERCISE 2
@@ -21,17 +25,20 @@ app.MapGet("/chequetext", (String? value) => {
     Decimal dValue;
     String chequeText;
 
-    if (!(value is null) && !value.Equals("") && Decimal.TryParse(value, out dValue) && dValue > 0) {
-        try {
-            chequeText = CreateChequeText(dValue);
-        } catch (OverflowException) {
-            return Results.BadRequest(new { error = "input value is too large." });
+    if (!String.IsNullOrEmpty(value)) {
+        if (Decimal.TryParse(value, out dValue) && dValue > 0) {
+            try {
+                chequeText = CreateChequeText(dValue);
+                return Results.Ok(new { chequeText });
+            } catch (OverflowException) {
+                return Results.BadRequest(new { error = "Input value is too large." });
+            }
+        } else {
+            return Results.BadRequest(new { error = "Input value must be a positive number." });
         }
-
-        return Results.Ok(new { chequeText });
     }
 
-    return Results.BadRequest(new { error = "value query is missing or invalid." });
+    return Results.BadRequest(new { error = "Value query is missing or empty." });
 });
 
 app.Run();
@@ -43,10 +50,20 @@ long StrToInteger(string strNumber) {
         For each char in string, convert the ASCII value of the char to it's digit value, 
         then shift the whole number left (multiply by 10) and add the new digit.
     */
+    bool isNegative = false;
+    if (strNumber.StartsWith("-")) {
+        isNegative = true;
+        strNumber = strNumber.Remove(0, 1);
+    }
+
     long value = 0;
     foreach (char c in strNumber) {
         value = checked(value * 10);
         value += c - '0';
+    }
+
+    if (isNegative) {
+        value = -value;
     }
     return value;
 }
