@@ -4,7 +4,7 @@ Follow the link below to install the latest .NET SDK:
 
 https://dotnet.microsoft.com/en-us/download
 
-A unit testing project in HC-Tech-Test.Tests contains a small XUnit unit test suite for the two exercises, which can be run via the IDE of your choice, if you wish to run them.
+A unit testing project in HC-Tech-Test.Tests contains a small XUnit unit test suite for the two exercises, which can be run via the IDE of your choice, or by running `dotnet test` from the tests folder.
 
 ## Steps to Build and Run
 1. Clone or download and unzip the repo to a folder on your computer
