@@ -72,15 +72,15 @@ public static class Ex2 {
             if (Decimal.TryParse(value, out dValue) && dValue >= 0) {
                 try {
                     chequeText = Ex2.CreateChequeText(dValue);
-                    return Results.Ok(new { chequeText });
+                    return TypedResults.Ok(new { chequeText });
                 } catch (OverflowException) {
-                    return Results.BadRequest(new { error = "Input value is too large." });
+                    return TypedResults.BadRequest(new { error = "Input value is too large." });
                 }
             } else {
-                return Results.BadRequest(new { error = "Input value must be positive or zero." });
+                return TypedResults.BadRequest(new { error = "Input value must be positive or zero." });
             }
         }
 
-        return Results.BadRequest(new { error = "Value query is missing or empty." });
+        return TypedResults.BadRequest(new { error = "Value query is missing or empty." });
     }
 }
