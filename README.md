@@ -3,6 +3,8 @@ Developed on .NET 7.0
 Follow the link below to install the latest .NET SDK:
 
 https://dotnet.microsoft.com/en-us/download
+
+The Tests.cs file contains a small XUnit unit test suite for the two exercises, which can be run via the IDE of your choice, if you wish to run them.
 ## Steps to Build and Run
 1. Clone or download and unzip the repo to a folder on your computer
 2. Open a terminal window and navigate to the app root folder
@@ -18,6 +20,3 @@ The API exposes two GET endpoints which can be tested through your browser or AP
 `/convertstring` Accepts one query parameter `value` - a positive or negative integer in string format, which will be converted to a long integer format and returned.
 
 `/chequetext` Accepts one query parameter `value` - a positive decimal number, which will be rounded to two decimal points, then converted to Word form in English. 
-
-
-The Tests.cs file contains a small XUnit unit test suite for the two exercises, which can be run via the IDE of your choice, if you wish to run them.
