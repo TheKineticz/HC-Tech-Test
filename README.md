@@ -1,5 +1,5 @@
 # HaloConnect Hiring Tech Test
-Developed on .NET 7.0
+Developed on .NET 7.0, using ASP.NET Minimal API
 Follow the link below to install the latest .NET SDK:
 
 https://dotnet.microsoft.com/en-us/download
