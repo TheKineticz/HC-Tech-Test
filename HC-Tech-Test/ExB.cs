@@ -3,6 +3,12 @@
 */
 public static class ExB
 {
+    /*
+        Takes a long integer > 0, and returns the english spelling of that number.
+        
+        param value: A long int. Must be > 0.
+        returns: The english spelling of the input value. e.g. An input of 55 return "FIFTY-FIVE"
+    */
     public static String NumberToEnglish(long n)
     {
         String[] units = {"ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"};
@@ -14,6 +20,15 @@ public static class ExB
             new Tuple<long, String>(1000, " THOUSAND "),
             new Tuple<long, String>(100, " HUNDRED "),
         };
+
+        if (n < 0) {
+            throw new ArgumentException("Input value must be greater than zero");
+        }
+
+        if (n == 0)
+        {
+            return "ZERO";
+        }
 
         /* 
             Recursively calls the function to split each "big number" section, 
@@ -62,6 +77,13 @@ public static class ExB
         return text;
     }
 
+    /*
+        Takes a decimal input >= 0, returns the english spelling of the value as it would appear on a cheque.
+        e.g. An input of 123.45 would return "ONE HUNDRED AND TWENTY-THREE DOLLARS AND FOURTY-FIVE CENTS"
+        
+        param value: A decimal number. Must be >= 0.
+        returns: The english spelling of the value as it would appear on a cheque.
+    */
     public static string CreateChequeText(Decimal number)
     {
         if (number < 0)
