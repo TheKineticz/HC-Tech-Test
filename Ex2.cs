@@ -1,5 +1,7 @@
-public static class Ex2 {
-    public static String NumberToEnglish(long n){
+public static class Ex2
+{
+    public static String NumberToEnglish(long n)
+    {
         String[] units = {"ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"};
         String[] tens = {"ZERO", "TEN", "TWENTY", "THIRTY", "FOURTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"};
         Tuple<long, String>[] powersOfTen = {
@@ -16,36 +18,48 @@ public static class Ex2 {
             e.g. 123456 is split into 7 parts, added to the string in order 100, 20, 3, 1000, 400, 50, 6
         */
         String text = "";
-        foreach (Tuple<long, String> pair in powersOfTen) {
-            if (n / pair.Item1 > 0){
+        foreach (Tuple<long, String> pair in powersOfTen)
+        {
+            if (n / pair.Item1 > 0)
+            {
                 text += NumberToEnglish(n / pair.Item1) + pair.Item2;
                 n %= pair.Item1;
             }
         }
 
-        if (n > 0){
-            if (!text.Equals("")) {
+        if (n > 0)
+        {
+            if (!text.Equals(""))
+            {
                 text += "AND ";
             }
-            if (n < 20) {
+
+            if (n < 20)
+            {
                 text += units[n];
-            } else {
+            }
+            else
+            {
                 text += tens[n / 10];
-                if (n % 10 > 0) {
+                if (n % 10 > 0)
+                {
                     text += "-" + units[n % 10];
                 }
             }
         }
 
         // Post cleanup of any trailing spaces
-        if (text.EndsWith(" ")) {
+        if (text.EndsWith(" "))
+        {
             text = text.Remove(text.Length - 1);
         }
         return text;
     }
 
-    public static string CreateChequeText(Decimal number) {
-        if (number < 0) {
+    public static string CreateChequeText(Decimal number)
+    {
+        if (number < 0)
+        {
             throw new ArgumentException("number parameter cannot be negative", nameof(number));
         }
         
@@ -53,30 +67,45 @@ public static class Ex2 {
         long dollars = (long) Math.Floor(number);
         long cents = (long) (Math.Round(number % 1 * 100));
 
-        if (dollars > 0 && cents > 0) {
+        if (dollars > 0 && cents > 0)
+        {
             return String.Format("{0} DOLLAR{1} AND {2} CENT{3}", NumberToEnglish(dollars), dollars > 1 ? "S":"", NumberToEnglish(cents), cents > 1 ? "S":"");
-        } else if (dollars > 0) {
+        }
+        else if (dollars > 0)
+        {
             return String.Format("{0} DOLLAR{1}", NumberToEnglish(dollars), dollars > 1 ? "S":"");
-        } else if (cents > 0) {
+        }
+        else if (cents > 0)
+        {
             return String.Format("{0} CENT{1}", NumberToEnglish(cents), cents > 1 ? "S":"");
-        } else {
+        }
+        else
+        {
             return "ZERO DOLLARS";
         }
     }
 
-    public static IResult Endpoint(String? value) {
+    public static IResult Endpoint(String? value)
+    {
         Decimal dValue;
         String chequeText;
 
-        if (!String.IsNullOrEmpty(value)) {
-            if (Decimal.TryParse(value, out dValue) && dValue >= 0) {
-                try {
+        if (!String.IsNullOrEmpty(value))
+        {
+            if (Decimal.TryParse(value, out dValue) && dValue >= 0)
+            {
+                try
+                {
                     chequeText = Ex2.CreateChequeText(dValue);
                     return TypedResults.Ok(new { chequeText });
-                } catch (OverflowException) {
+                }
+                catch (OverflowException)
+                {
                     return TypedResults.BadRequest(new { error = "Input value is too large." });
                 }
-            } else {
+            }
+            else
+            {
                 return TypedResults.BadRequest(new { error = "Input value must be positive or zero." });
             }
         }
