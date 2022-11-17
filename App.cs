@@ -1,7 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/convertstring", Ex1.Endpoint);
-app.MapGet("/chequetext", Ex2.Endpoint);
+app.MapGet("/convertstring", ExA.Endpoint);
+app.MapGet("/chequetext", ExB.Endpoint);
 
 app.Run();

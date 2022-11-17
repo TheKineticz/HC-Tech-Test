@@ -1,4 +1,7 @@
-public static class Ex2
+/*
+    Exercise B: Write the text on a cheque
+*/
+public static class ExB
 {
     public static String NumberToEnglish(long n)
     {
@@ -29,15 +32,18 @@ public static class Ex2
 
         if (n > 0)
         {
+            // If a large numword has been added to this string previously, seperate the large and small numword sections with "AND"
             if (!text.Equals(""))
             {
                 text += "AND ";
             }
 
+            // If only a number < 20 remains, add just that numword to the string
             if (n < 20)
             {
                 text += units[n];
             }
+            // Else add the numword for the tens-value to the string, and convert the remaining digit numword seperately
             else
             {
                 text += tens[n / 10];
@@ -48,7 +54,7 @@ public static class Ex2
             }
         }
 
-        // Post cleanup of any trailing spaces
+        // Post-process cleanup of any trailing spaces
         if (text.EndsWith(" "))
         {
             text = text.Remove(text.Length - 1);
@@ -85,6 +91,12 @@ public static class Ex2
         }
     }
 
+    /*
+        Main function for the /chequetext endpoint. Returns a Status OK with the converted string payload on success, Status BadRequest with error message on fail.
+        
+        param value: The query parameter storing the string value of the number to be converted to decimal and passed to CreateChequeText. Nullable.
+        returns: A result with payload, to be interpreted by the browser.
+    */
     public static IResult Endpoint(String? value)
     {
         Decimal dValue;
@@ -92,21 +104,22 @@ public static class Ex2
 
         if (!String.IsNullOrEmpty(value))
         {
-            if (Decimal.TryParse(value, out dValue) && dValue >= 0)
+            // Input is received as String? so that the function can explicitly parse the input value to decimal and respond accordingly.
+            if (Decimal.TryParse(value, out dValue))
             {
                 try
                 {
-                    chequeText = Ex2.CreateChequeText(dValue);
+                    chequeText = CreateChequeText(dValue);
                     return TypedResults.Ok(new { chequeText });
                 }
                 catch (OverflowException)
                 {
                     return TypedResults.BadRequest(new { error = "Input value is too large." });
                 }
-            }
-            else
-            {
-                return TypedResults.BadRequest(new { error = "Input value must be positive or zero." });
+                catch (ArgumentException)
+                {
+                    return TypedResults.BadRequest(new { error = "Input value must be positive or zero." });
+                }
             }
         }
 
