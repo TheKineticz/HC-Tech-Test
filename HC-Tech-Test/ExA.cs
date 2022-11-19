@@ -30,12 +30,12 @@ public static class ExA
             foreach (char c in strNumber)
             {
                 value = checked(value * 10); // Use checked so an ArithmeticError is thrown on overflow
-                value += c - '0';
+                value  = checked(value + c - '0');
             }
 
             if (isNegative)
             {
-                value = -value;
+                value = checked(-value);
             }
 
             return value;
