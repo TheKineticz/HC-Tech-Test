@@ -30,12 +30,12 @@ public static class ExA
             foreach (char c in strNumber)
             {
                 value = checked(value * 10); // Use checked so an ArithmeticError is thrown on overflow
-                value  = checked(value + c - '0');
+                value  = value + (c - '0');
             }
 
             if (isNegative)
             {
-                value = checked(-value);
+                value = -value;
             }
 
             return value;
@@ -60,6 +60,7 @@ public static class ExA
             try
             {
                 long numberValue = StrToInteger(value);
+                Console.WriteLine(numberValue.ToString());
                 return TypedResults.Ok(new { value = numberValue });
             } 
             catch (ArithmeticException)
